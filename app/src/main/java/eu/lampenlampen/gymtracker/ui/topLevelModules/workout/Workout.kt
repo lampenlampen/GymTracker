@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -43,16 +44,22 @@ import java.util.UUID
 
 
 fun NavGraphBuilder.workoutScreen(
-    onNavigateToExercise: (String) -> Unit
+    onNavigateToExercise: (String) -> Unit,
+    onNavigateToAddExerciseToWorkout: () -> Unit
 ) {
     composable("Workout") {
+
         val viewModel: WorkoutViewModel = viewModel(factory = WorkoutViewModel.Factory)
+
+        if (pickedExercise. != null) {
+            viewModel.addWorkout()
+        }
+
         viewModel.loadWorkouts()
-        val state by viewModel.uiState.collectAsState()
+        val state by viewModel.uiState.collectAsStateWithLifecycle()
 
         WorkoutScreen(state, addWorkout = {
-            // TODO AddWorkout
-            viewModel.addWorkout()
+            onNavigateToAddExerciseToWorkout()
         }, onNavigateToExercise = {
             onNavigateToExercise(it.toString())
         })

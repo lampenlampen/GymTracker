@@ -17,7 +17,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import eu.lampenlampen.gymtracker.TopLevelNavigation
+import eu.lampenlampen.gymtracker.ui.topLevelModules.addExercise.addExerciseScreen
+import eu.lampenlampen.gymtracker.ui.topLevelModules.addExercise.navigateToAddExerciseToWorkout
 import eu.lampenlampen.gymtracker.ui.topLevelModules.exerciseDetailScreen
+import eu.lampenlampen.gymtracker.ui.topLevelModules.exercisePicker.exercisePickerScreen
+import eu.lampenlampen.gymtracker.ui.topLevelModules.exercisePicker.navigateToExercisePicker
 import eu.lampenlampen.gymtracker.ui.topLevelModules.exerciseScreen
 import eu.lampenlampen.gymtracker.ui.topLevelModules.navigateToExercise
 import eu.lampenlampen.gymtracker.ui.topLevelModules.workout.workoutScreen
@@ -101,7 +105,20 @@ fun NavigationHost(
 		}
 		exerciseDetailScreen { }
 		exerciseScreen { }
-		workoutScreen(onNavigateToExercise = { navController.navigateToExercise(it) })
+		workoutScreen(onNavigateToExercise = { navController.navigateToExercise(it) },
+			onNavigateToAddExerciseToWorkout = { navController.navigateToExercisePicker()})
+		addExerciseScreen {  }
+
+		exercisePickerScreen(
+			onExerciseSelected = {
+				navController.previousBackStackEntry
+					?.savedStateHandle?.set("exerciseIdToAdd", it)
+				navController.popBackStack()
+			},
+			onCreateNewExercise = {
+				// TODO navigate to Create Exercise
+			}
+		)
 	}
 }
 

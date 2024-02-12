@@ -1,7 +1,9 @@
 package eu.lampenlampen.gymtracker.ui.topLevelModules.workout
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
@@ -15,7 +17,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-internal class WorkoutViewModel(private val workoutRepo: WorkoutRepo) : ViewModel() {
+internal class WorkoutViewModel(savedStateHandle: SavedStateHandle, private val workoutRepo: WorkoutRepo) : ViewModel() {
 	private val _uiState: MutableStateFlow<WorkoutUiState> = MutableStateFlow(WorkoutUiState.Loading)
 	val uiState: StateFlow<WorkoutUiState> = _uiState.asStateFlow()
 
@@ -46,8 +48,11 @@ internal class WorkoutViewModel(private val workoutRepo: WorkoutRepo) : ViewMode
 	companion object {
 		val Factory: ViewModelProvider.Factory = viewModelFactory {
 			initializer {
+				val savedStateHandle = createSavedStateHandle()
+				//val a = (this[])
+
 				val repo = WorkoutRepoTestImpl()
-				WorkoutViewModel(repo)
+				WorkoutViewModel(savedStateHandle, repo)
 			}
 		}
 	}
